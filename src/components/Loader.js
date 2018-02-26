@@ -1,10 +1,8 @@
 import React from 'react';
-import { Alert } from 'reactstrap';
 
-const Loader = props => {
-	return (
-		<Alert color="success"> Loading...{' '}<i className="fa fa-spinner" aria-hidden="true"></i> </Alert>
-	);
-};
+const Loader = props => (<div className="Loading">
+		Loading...{' '}
+		<i className="fa fa-spinner" aria-hidden="true"></i>
+	</div>);
 
 export default Loader;

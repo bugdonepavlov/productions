@@ -3,59 +3,86 @@ import React, { Component } from 'react';
 class Form extends Component {
 	state = {
 		email: '',
-		fullName: '',
+		name: '',
 		emailError: '',
-		fullNameError: ''
+		nameError: ''
 	}
-	constructor(props, context) {
-		super(props, context);
-		this.emailRegexp = /([\w\.\-_]+)?\w+@[\w-_]+(\.\w+){1,}/;
-	}
+
 	componentDidMount() {
 		this.validateEmail(this.state.email);
-		this.validateFullName(this.state.fullName);
+		this.validateName(this.state.name);
 	}
-	render() {
-		return (
-			<form className="Form" onSubmit={this.handleSubmit}>
-				<div className="title">Log in</div>
-				<fieldset>
-					<div className="group">
-						<label>Full name:</label>
-						<input name="fullName" type="text" value={this.state.fullName} onChange={this.handleChange} placeholder="Enter your name" />
-						<div className="error">{this.state.fullNameError}</div>
-					</div>
-					<div className="group">
-						<label>E-mail</label>
-						<input name="email" type="email" value={this.state.email} onChange={this.handleChange} placeholder="Enter your email" />
-						<div className="error">{this.state.emailError}</div>
-					</div>
-					<input disabled={this.state.emailError || this.state.passwordError} type="submit" value="Submit order" />
-				</fieldset>
-			</form>
-		);
-	}
-	handleChange = (e) => {
+
+	handleChangeName = (e) => {
 		const target = e.target;
 		const name = target.name;
-		this['validate' + name.charAt(0).toUpperCase() + name.substr(1)](target.value);
+		this.validateName(target.value)
 		this.setState({
 			[name]: target.value
 		});
 	}
+
+	handleChangeEmail = (e) => {
+		const target = e.target;
+		const name = target.name;
+		this.validateEmail(target.value)
+		this.setState({
+			[name]: target.value
+		});
+	}
+
+	handleSubmit = (e) => {
+		this.setState({ email: '', name: '', emailError: '', nameError: '' });
+		this.props.clear();
+		e.preventDefault();
+	}
+
 	validateEmail(value) {
+		this.emailRegexp = /([\w\.\-_]+)?\w+@[\w-_]+(\.\w+){1,}/;
+
 		if (!value) return this.setState({ emailError: 'Email cannot be empty' });
 		if (!this.emailRegexp.test(value)) return this.setState({ emailError: 'Email is not correct.' });
 		this.setState({ emailError: '' });
 	}
-	validateFullName(value) {
-		if (!value) return this.setState({ fullNameError: 'Name cannot be empty' });
-		this.setState({ fullNameError: '' });
+
+	validateName(value) {
+		if (!value) return this.setState({ nameError: 'Name cannot be empty' });
+		this.setState({ nameError: '' });
 	}
-	handleSubmit = (e) => {
-		this.setState({ email: '', password: '', emailError: '', fullNameError: '' });
-		this.props.clearBasket();
-		e.preventDefault();
+
+	render() {
+		return (<form onSubmit={this.handleSubmit}>
+			<h4>Log in</h4>
+			<div className="form-group">
+				<label>Full name:</label>
+				<input
+					name="name"
+					type="text"
+					value={this.state.name}
+					onChange={this.handleChangeName}
+					placeholder="Enter your name"
+					className="form-control"
+				/>
+				{!!this.state.nameError && (<div className="alert alert-danger">{this.state.nameError}</div>)}
+			</div>
+			<div className="form-group">
+				<label>E-mail</label>
+				<input
+					name="email"
+					type="email"
+					value={this.state.email}
+					onChange={this.handleChangeEmail}
+					placeholder="Enter your email"
+					className="form-control"
+				/>
+				{!!this.state.emailError && (<div className="alert alert-danger">{this.state.emailError}</div>)}
+			</div>
+			<button
+				className="btn btn-primary"
+				disabled={this.state.emailError || this.state.nameError}
+				type="submit"
+			>Submit</button>
+		</form>);
 	}
 }
 

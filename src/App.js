@@ -6,10 +6,10 @@ import store from './redux/store';
 import history from './history';
 
 const App = () => (
-  <Provider store={store}>
-    <ConnectedRouter history={history}>
-      <Root />
-    </ConnectedRouter>
-  </Provider>);
+	<Provider store={store}>
+		<ConnectedRouter history={history}>
+			<Root />
+		</ConnectedRouter>
+	</Provider>);
 
 export default App;

@@ -1,23 +1,35 @@
-import React from 'react';
-// import { Route } from 'react-router-dom';
+import React, { Component } from 'react';
+import {connect} from 'react-redux';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Main from './Main';
+import Loader from './Loader';
+import {fetchData} from 'ducks/fetch';
 
-const Root = () => (
-  <div className="wrapper">
-    <Header></Header>
-    <div className="container">
-        <div className="row">
-          <div className="col-md-4">
-            <Sidebar></Sidebar>
-          </div>
+class Root extends Component {
+	componentDidMount() {
+		this.props.fetchData()
+	}
 
-          <div className="col-md-8">
-            <Main />
-          </div>
-        </div>
-    </div>
-  </div>);
+	render() {
+		return (
+			<div className="wrapper">
+				{this.props.loading && <Loader/>}
+				<Header></Header>
+				<div className="container">
+					<div className="row">
+					<div className="col-md-2">
+						<Sidebar></Sidebar>
+					</div>
+					<div className="col-md-10">
+						<Main />
+					</div>
+					</div>
+				</div>
+			</div>);
+	}
+}
 
-export default Root;
+export default connect((state) => ({
+	loading: state.fetch.get('loading'),
+}), { fetchData }, null, {pure: false})(Root);
